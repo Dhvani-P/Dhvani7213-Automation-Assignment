@@ -3,6 +3,7 @@ variable "rg_name" {}
 
 variable "linux-name" {
 }
+variable "linux_vm_id" {}
 variable "location" {}
 variable "subnet_id" {}
 variable "linux_avset" {}

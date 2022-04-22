@@ -21,12 +21,13 @@ module "network" {
 module "vmlinux" {
   source = "./modules/vmlinux"
   linux-name = {
-    "assign7213-Linux1" = "Standard_B1s"
-    "assign7213-Linux2" = "Standard_B1s"
+    "assign7213-linux1" = "Standard_B1s"
+    "assign7213-linux2" = "Standard_B1s"
   }
   linux_avset = "linux-avs"
   rg_name     = module.rgroup.rg_name
   location    = module.rgroup.location_name
+  linux_vm_id = module.vmlinux.linux_vm_id
   subnet_id   = module.network.subnet_id
   depends_on  = [module.network]
   tags        = local.common_tags

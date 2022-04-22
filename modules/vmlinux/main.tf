@@ -12,9 +12,9 @@ resource "azurerm_public_ip" "linux_pip" {
   name                = "${each.key}-pip"
   resource_group_name = var.rg_name
   location            = var.location
-  allocation_method   = "Static"
-
-   tags = var.tags
+  allocation_method   = "Dynamic"
+  domain_name_label   = "${each.key}"
+  tags = var.tags
 
 }
 
@@ -63,5 +63,25 @@ resource "azurerm_linux_virtual_machine" "linux_machine" {
   }
   tags = var.tags
 
+}
+
+resource "azurerm_managed_disk" "linux_disk" {
+  for_each            = var.linux-name
+  name                = "${each.key}-datadisk"
+  location             = var.location
+  resource_group_name  = var.rg_name
+  storage_account_type = "Standard_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = 10
+  tags                 = var.tags
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "linux_attachment" {
+  for_each            = var.linux-name
+  managed_disk_id    = azurerm_managed_disk.linux_disk[each.key].id
+  virtual_machine_id = azurerm_linux_virtual_machine.linux_machine[each.key].id
+  lun                = 0
+  caching            = "ReadWrite"
+  depends_on         = [azurerm_managed_disk.linux_disk, azurerm_linux_virtual_machine.linux_machine]
 }
 

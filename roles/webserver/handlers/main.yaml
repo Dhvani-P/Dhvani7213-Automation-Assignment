@@ -1,0 +1,12 @@
+---
+# handlers file for webserver
+- name: restart_apache2
+  service:
+    name: apache2
+    state: restarted
+
+- name: rebooted
+  service:
+    name: apache2
+    state: started
+    enabled: yes

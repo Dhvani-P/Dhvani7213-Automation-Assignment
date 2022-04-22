@@ -17,3 +17,7 @@ output "linux_nic" {
 output "linux_vm_id" {
   value = values(azurerm_linux_virtual_machine.linux_machine)[*].id
 }
+
+output "Linux_domain_names" {
+  value = values(azurerm_public_ip.linux_pip)[*].fqdn
+}

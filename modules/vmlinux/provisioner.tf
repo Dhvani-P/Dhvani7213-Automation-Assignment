@@ -1,13 +1,11 @@
 resource "null_resource" "linux_provisioner" {
   for_each = var.linux-name
   depends_on = [
-    azurerm_linux_virtual_machine.linux_machine
+    azurerm_linux_virtual_machine.linux_machine , azurerm_virtual_machine_data_disk_attachment.linux_attachment
   ]
 
-  provisioner "remote-exec" {
-    inline = [
-      "/usr/bin/hostname"
-    ]
+  provisioner "local-exec" {
+    command = "sleep 20; ansible-playbook groupX-playbook.yaml"
     connection {
       type        = "ssh"
       user        = var.admin_username

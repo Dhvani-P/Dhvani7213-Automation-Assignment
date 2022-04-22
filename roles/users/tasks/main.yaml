@@ -1,0 +1,37 @@
+---
+# tasks file for users
+- name: Create user group 
+  group:
+    name: "{{ groupname }}"
+    state: present
+
+- name: Make sure we have a "wheel" group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+   
+- name: creating users and generate SSH key 
+  user:
+    name: "{{ item }}"
+    state: present
+    append: yes
+    shell: /bin/bash
+    group: "{{ groupname }}"
+    groups: wheel
+    home: /home/{{ item }} 
+  loop: "{{ userlist }}"
+
+- name: create users
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+  loop: "{{ userlist }}"

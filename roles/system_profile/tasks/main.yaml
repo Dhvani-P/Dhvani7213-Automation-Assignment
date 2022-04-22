@@ -1,0 +1,11 @@
+---
+# task file for system_profile
+- name: appending session timeout to /etc/profile
+  blockinfile:
+    path: "{{ path }}"
+    insertafter: EOF
+    backup: yes
+    state: present
+    block: |
+      export "#This is a test block added by Ansible…… n01517213"
+      export TMOUT=1800

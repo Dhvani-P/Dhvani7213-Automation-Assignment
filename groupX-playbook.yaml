@@ -1,0 +1,9 @@
+- name: Main Playbook for all roles
+  hosts: linux
+  roles:
+    - datadisk
+    - system_profile
+    - users
+    - webserver
+
+

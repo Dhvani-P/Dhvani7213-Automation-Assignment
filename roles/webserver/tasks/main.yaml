@@ -1,0 +1,31 @@
+---
+# tasks for webserver
+- name: Install and configure Apache web server software
+  apt:
+    name: apache2
+    state: latest
+  notify: restart_apache2
+
+- name: creating index.html
+  copy:
+    src: vm1.html
+    dest: /var/www/html/index.html
+  when: ansible_hostname == "assign7213-linux1"
+
+- name: creating index.html
+  copy:
+    src: vm2.html
+    dest: /var/www/html/index.html
+  when: ansible_hostname == "assign7213-linux2"
+
+- name: coping file and permission
+  file: 
+    mode: 0444
+    path: /var/www/html/index.html
+    state: file
+
+- name: "UFW firewall allow HTTP on port 80"
+  ufw:
+    rule: allow
+    port: "80"
+    proto: tcp
